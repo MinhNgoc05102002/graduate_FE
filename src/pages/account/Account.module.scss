@@ -1,0 +1,56 @@
+.avatar_box {
+    width: fit-content;
+    height: fit-content;
+}
+
+.navbar {
+    margin-top: 5px;
+    background-color: var(--white-color);
+    // display: flex;
+    justify-content: center;
+    .navbar_container {
+        border-bottom: 2px solid rgb(222, 221, 221);
+        width: 100%;
+        display: flex;
+        align-items: center;
+        .navbar_item {
+            cursor: pointer;
+            color: #65676B;
+            height: 54px;
+            padding: 0px 16px;
+            // font-size: 15px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            position: relative;
+            margin: 3px 0;
+            .underline {
+                border-top-left-radius: 1px;
+                border-top-right-radius: 1px;
+                background-color: hsl(214, 89%, 52%);
+                height: 3px;
+                position: absolute;
+                bottom: -3px;
+                left: 0;
+                right: 0;
+            }
+            .title_active {
+                color: hsl(214, 89%, 52%);
+            }
+            &:hover {
+                border-radius: 6px;
+                background-color: rgba(0, 0, 0, 0.05); 
+            }
+        }
+    }
+}
+
+.search_container {
+    margin-top: 15px;
+
+    .box_search {
+        background-color: white;
+        border-radius: 5px;
+        padding: 5px;
+    }
+}
