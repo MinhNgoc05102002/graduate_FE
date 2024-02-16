@@ -1,6 +1,6 @@
 import PerfectScrollbar from "perfect-scrollbar";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useAppDispatch, useAppSelector } from "~/redux/hook";
 import { inforUser, logout } from "~/redux/slices/authSlice";
@@ -245,10 +245,10 @@ export default function Header() {
                                     <div className="dropdown-divider"></div>
                                 </li>
                                 <li>
-                                    <a onClick={handleLogout} className="dropdown-item" href="#">
+                                    <Link to="/login" onClick={handleLogout} className="dropdown-item" >
                                         <i className="bx bx-power-off me-2"></i>
                                         <span className="align-middle">Đăng xuất</span>
-                                    </a>
+                                    </Link>
                                 </li>
                             </ul>
                         </li>

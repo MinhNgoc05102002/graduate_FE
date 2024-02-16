@@ -34,5 +34,10 @@ export const PRIVATE_ROUTER = [
         path:"/account/:username",
         page: Account,
         layout: DefaultLayout
-    }
+    },
+    // {
+    //     path:"/account/:username/:list",
+    //     page: Account,
+    //     layout: DefaultLayout
+    // }
 ]

@@ -40,10 +40,11 @@ export const Get = async (path:string, options = {},token:string) => {
     return res
 }
 
-export const Post = async (path:string, options = {},token:string) => {
+export const Post = async (path:string, options:any = {},token:string) => {
     const res:IResponse = await request.post(path, options,{
         headers: {
-            Authorization: `Bearer ${token}`
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json'
         }
     });
     return res   

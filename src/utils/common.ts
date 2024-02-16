@@ -10,6 +10,19 @@ export function CheckResponseSuccess(res:any) {
     return true;
 }
 
+/**
+ * lấy id từ url hiện tại
+ */
+export function GetIdFromCurrentPage() {
+    // lấy id từ url
+    let arrayPath = window.location.pathname.split("/");
+    let _id = arrayPath ? arrayPath[arrayPath.length - 1] : null;
+    if (_id?.endsWith('#')) {
+        _id = _id.replace('#','')
+    }
+    return _id;
+}
+
 export function findNotifDate(date_notified = "2021-11-05 15:00:00") {
     /**
     * @ findNotifDate : Finds the Date Difference of a Notification

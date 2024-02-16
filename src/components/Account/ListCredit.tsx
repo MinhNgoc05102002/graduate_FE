@@ -9,7 +9,7 @@ import { inforUser } from "~/redux/slices/authSlice";
 import styles from "../../pages/account/Account.module.scss";
 import { ICredit } from "~/types/ICredit";
 
-export function showDate(date_notified = "2021-11-05 15:00:00") {
+function showDate(date_notified = "2021-11-05 15:00:00") {
     /**
     * @ findNotifDate : Finds the Date Difference of a Notification
     * @ date_notified : The notification date
@@ -64,17 +64,24 @@ export function showDate(date_notified = "2021-11-05 15:00:00") {
 }
 
 // truyền username của user đang đăng nhập vào đây
-export default function ListCredit() {
+export default function ListCredit(props:any) {
+    const {username} = props
     const userData = useAppSelector(inforUser);
-    let [listCredit, setListCredit] = useState<ICredit[]>([]);
+    const [listCredit, setListCredit] = useState<ICredit[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [search, setSearch] = useState("");
-    
+    const [pageIndex, setPageIndex] = useState(1);
+    const [totalPage, setToTalPage] = useState(1);
+
     useEffect(() => {
         if (userData?.token) {
             getRecentCredit();
         }
-    }, [userData?.token])
+    }, [userData?.token, username])
+
+    useEffect(() => {
+        getRecentCredit();
+    }, [pageIndex])
 
     const getRecentCredit = async () => {
         // dispatch(login(formLogin))
@@ -82,15 +89,17 @@ export default function ListCredit() {
         await Post(
             "/api/Credit/get-list-credit-by-user", 
             {
-                pageSize: 100,
-                pageIndex: 0,
-                searchText: search
+                pageSize: 5,
+                pageIndex: pageIndex,
+                searchText: search,
+                username: username
             }, 
             userData?.token ?? ""
         ).then((res) => {
             if(CheckResponseSuccess(res)) {
                 let listCredit = res?.returnObj?.listResult;
                 setListCredit(listCredit);
+                setToTalPage(res?.returnObj?.totalPage)
             }
             else {
                 toast.error("Đã có lỗi xảy ra.");
@@ -103,6 +112,20 @@ export default function ListCredit() {
         setIsLoading(false);
     };
 
+    const handleNextPage = (index:number) => {
+        let newPageIndex = pageIndex + index;
+        console.log(newPageIndex)
+        if (newPageIndex >= 1 && newPageIndex <= totalPage) {
+            setPageIndex(newPageIndex);
+        }
+    }
+
+    const handleSearch = (e:any = null) => {
+        setPageIndex(1)
+        e?.preventDefault();
+        getRecentCredit()
+    }
+
     return (
         <>
             <Loading isLoading={isLoading}/>
@@ -114,14 +137,11 @@ export default function ListCredit() {
 
                 <div className={`d-flex col-4 align-items-center ${styles.box_search}`}>
                     <i className="bx bx-search fs-4 lh-0"></i>
-                    <form onSubmit={(e) => {
-                        e.preventDefault();
-                        getRecentCredit()
-                    }}>
+                    <form onSubmit={(e) => handleSearch(e)}>
                         <input
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
-                            onBlur={getRecentCredit}
+                            onBlur={(e) => handleSearch()}
                             type="text"
                             className="form-control border-0 shadow-none"
                             placeholder="Tìm kiếm..."
@@ -130,6 +150,8 @@ export default function ListCredit() {
                     </form>
                 </div>
             </div>
+
+
 
             {listCredit.map((credit, index) => {
                 let lastTime = index > 0 ? showDate(listCredit[index-1].createdAt) : ''
@@ -147,5 +169,29 @@ export default function ListCredit() {
                 </div>)
             })}
             
+            <nav aria-label="Page navigation">
+                <ul className="pagination justify-content-center mt-4">
+                <li className="page-item prev">
+                    <a onClick={() => handleNextPage(-1)} className={`page-link fw-semibold ${styles.arrow} ${pageIndex > 1 ? styles.active : null}`}>
+                        <i className="tf-icon bx bx-chevron-left"></i>
+                        <span>Trước</span>
+                    </a>
+                </li>
+                {/* <li className="page-item active">
+                    <a className="page-link">Trang 2 / 3</a>
+                </li> */}
+                <li className="page-item">
+                    <a className={`page-link fw-semibold ${styles.pageSize} `}>
+                        Trang {pageIndex} / {totalPage}
+                    </a>
+                </li>
+                <li className="page-item next">
+                    <a onClick={() => handleNextPage(1)} className={`page-link fw-semibold ${styles.arrow} ${pageIndex < totalPage ? styles.active : null}`}>
+                        <span>Tiếp</span>
+                        <i className="tf-icon bx bx-chevron-right"></i>
+                    </a>
+                </li>
+                </ul>
+            </nav>
         </>)
 };

@@ -1,11 +1,15 @@
 import { useEffect, useState } from "react"
 import PerfectScrollbar from "perfect-scrollbar";
-import { useAppDispatch } from "~/redux/hook";
-import { logout } from "~/redux/slices/authSlice";
+import { useAppDispatch, useAppSelector } from "~/redux/hook";
+import { inforUser, logout } from "~/redux/slices/authSlice";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function Sidebar() {
     const [openItem, setOpenItem] = useState('');
+    const userData = useAppSelector(inforUser);
     const dispatch = useAppDispatch();
+    const navigate = useNavigate();
+    
     const handleLogout = () => {
         dispatch(logout())
     }
@@ -24,7 +28,7 @@ export default function Sidebar() {
             {/* <!-- Menu --> */}
             <aside id="layout-menu" className="layout-menu menu-vertical menu bg-menu-theme" >
                 <div className="app-brand demo">
-                    <a href="index.html" className="app-brand-link">
+                    <a style={{cursor: 'pointer'}} onClick={() => navigate('/')} className="app-brand-link">
                         <span className="app-brand-logo demo">
                             <svg
                                 width="25"
@@ -93,10 +97,10 @@ export default function Sidebar() {
                 <ul id="scroll_menu" className="menu-inner py-1" style={{maxHeight: '100vh'}}>
                     {/* <!-- Dashboard --> */}
                     <li className="menu-item active">
-                        <a href="index.html" className="menu-link">
+                        <Link to="/" className="menu-link">
                             <i className="menu-icon tf-icons bx bx-home-circle"></i>
                             <div data-i18n="Analytics">Trang chủ</div>
-                        </a>
+                        </Link>
                     </li>
 
                     {/* <!-- Tìm kiếm --> */}
@@ -117,14 +121,14 @@ export default function Sidebar() {
                         </a>
                         <ul className="menu-sub">
                             <li className="menu-item">
-                                <a href="pages-account-settings-account.html" className="menu-link">
+                                <a href="#" className="menu-link">
                                     <div data-i18n="Account">Thêm mới</div>
                                 </a>
                             </li>
                             <li className="menu-item">
-                                <a href="pages-account-settings-notifications.html" className="menu-link">
+                                <Link to={`/account/${userData?.username}`} className="menu-link">
                                     <div data-i18n="Notifications">Xem tất cả bộ thẻ</div>
-                                </a>
+                                </Link>
                             </li>
                             {/* <li className="menu-item">
                                 <a href="pages-account-settings-connections.html" className="menu-link">
@@ -140,12 +144,12 @@ export default function Sidebar() {
                         </a>
                         <ul className="menu-sub">
                             <li className="menu-item">
-                                <a href="auth-login-basic.html" className="menu-link" target="_blank">
+                                <a href="#" className="menu-link">
                                     <div data-i18n="Basic">Thêm mới</div>
                                 </a>
                             </li>
                             <li className="menu-item">
-                                <a href="auth-register-basic.html" className="menu-link" target="_blank">
+                                <a href="#" className="menu-link">
                                     <div data-i18n="Basic">Xem tất cả thư mục</div>
                                 </a>
                             </li>
@@ -158,12 +162,12 @@ export default function Sidebar() {
                         </a>
                         <ul className="menu-sub">
                             <li className="menu-item">
-                                <a href="pages-misc-error.html" className="menu-link">
+                                <a href="#" className="menu-link">
                                     <div data-i18n="Error">Thêm mới</div>
                                 </a>
                             </li>
                             <li className="menu-item">
-                                <a href="pages-misc-under-maintenance.html" className="menu-link">
+                                <a href="#" className="menu-link">
                                     <div data-i18n="Under Maintenance">Xem tất cả lớp học</div>
                                 </a>
                             </li>
@@ -177,103 +181,6 @@ export default function Sidebar() {
                             <i className="menu-icon tf-icons bx bx-box"></i>
                             <div data-i18n="User interface">Trang cá nhân</div>
                         </a>
-                        <ul className="menu-sub">
-                            <li className="menu-item">
-                                <a href="ui-accordion.html" className="menu-link">
-                                    <div data-i18n="Accordion">Accordion</div>
-                                </a>
-                            </li>
-                            <li className="menu-item">
-                                <a href="ui-alerts.html" className="menu-link">
-                                    <div data-i18n="Alerts">Alerts</div>
-                                </a>
-                            </li>
-                            <li className="menu-item">
-                                <a href="ui-badges.html" className="menu-link">
-                                    <div data-i18n="Badges">Badges</div>
-                                </a>
-                            </li>
-                            <li className="menu-item">
-                                <a href="ui-buttons.html" className="menu-link">
-                                    <div data-i18n="Buttons">Buttons</div>
-                                </a>
-                            </li>
-                            <li className="menu-item">
-                                <a href="ui-carousel.html" className="menu-link">
-                                    <div data-i18n="Carousel">Carousel</div>
-                                </a>
-                            </li>
-                            <li className="menu-item">
-                                <a href="ui-collapse.html" className="menu-link">
-                                    <div data-i18n="Collapse">Collapse</div>
-                                </a>
-                            </li>
-                            <li className="menu-item">
-                                <a href="ui-dropdowns.html" className="menu-link">
-                                    <div data-i18n="Dropdowns">Dropdowns</div>
-                                </a>
-                            </li>
-                            <li className="menu-item">
-                                <a href="ui-footer.html" className="menu-link">
-                                    <div data-i18n="Footer">Footer</div>
-                                </a>
-                            </li>
-                            <li className="menu-item">
-                                <a href="ui-list-groups.html" className="menu-link">
-                                    <div data-i18n="List Groups">List groups</div>
-                                </a>
-                            </li>
-                            <li className="menu-item">
-                                <a href="ui-modals.html" className="menu-link">
-                                    <div data-i18n="Modals">Modals</div>
-                                </a>
-                            </li>
-                            <li className="menu-item">
-                                <a href="ui-navbar.html" className="menu-link">
-                                    <div data-i18n="Navbar">Navbar</div>
-                                </a>
-                            </li>
-                            <li className="menu-item">
-                                <a href="ui-offcanvas.html" className="menu-link">
-                                    <div data-i18n="Offcanvas">Offcanvas</div>
-                                </a>
-                            </li>
-                            <li className="menu-item">
-                                <a href="ui-pagination-breadcrumbs.html" className="menu-link">
-                                    <div data-i18n="Pagination &amp; Breadcrumbs">Pagination &amp; Breadcrumbs</div>
-                                </a>
-                            </li>
-                            <li className="menu-item">
-                                <a href="ui-progress.html" className="menu-link">
-                                    <div data-i18n="Progress">Progress</div>
-                                </a>
-                            </li>
-                            <li className="menu-item">
-                                <a href="ui-spinners.html" className="menu-link">
-                                    <div data-i18n="Spinners">Spinners</div>
-                                </a>
-                            </li>
-                            <li className="menu-item">
-                                <a href="ui-tabs-pills.html" className="menu-link">
-                                    <div data-i18n="Tabs &amp; Pills">Tabs &amp; Pills</div>
-                                </a>
-                            </li>
-                            <li className="menu-item">
-                                <a href="ui-toasts.html" className="menu-link">
-                                    <div data-i18n="Toasts">Toasts</div>
-                                </a>
-                            </li>
-                            <li className="menu-item">
-                                <a href="ui-tooltips-popovers.html" className="menu-link">
-                                    <div data-i18n="Tooltips & Popovers">Tooltips &amp; popovers</div>
-                                </a>
-                            </li>
-                            <li className="menu-item">
-                                <a href="ui-typography.html" className="menu-link">
-                                    <div data-i18n="Typography">Typography</div>
-                                </a>
-                            </li>
-                        </ul>
                     </li>
 
                     {/* <!-- Extended components --> */}
@@ -282,72 +189,19 @@ export default function Sidebar() {
                             <i className='menu-icon tf-icons bx bx-cog'></i>
                             <div data-i18n="Extended UI">Cài đặt</div>
                         </a>
-                        <ul className="menu-sub">
-                            <li className="menu-item">
-                                <a href="extended-ui-perfect-scrollbar.html" className="menu-link">
-                                    <div data-i18n="Perfect Scrollbar">Perfect scrollbar</div>
-                                </a>
-                            </li>
-                            <li className="menu-item">
-                                <a href="extended-ui-text-divider.html" className="menu-link">
-                                    <div data-i18n="Text Divider">Text Divider</div>
-                                </a>
-                            </li>
-                        </ul>
                     </li>
-
-                    {/* <li className="menu-item">
-                        <a href="icons-boxicons.html" className="menu-link">
-                            <i className="menu-icon tf-icons bx bx-crown"></i>
-                            <div data-i18n="Boxicons">Boxicons</div>
-                        </a>
-                    </li> */}
 
                     {/* <!-- Forms & Tables --> */}
-                    <li className="menu-header small text-uppercase"><span className="menu-header-text">Khác</span></li>
-                    {/* <!-- Forms --> */}
-                    {/* <li className="menu-item">
-                        <a href="#" className="menu-link menu-toggle">
-                            <i className="menu-icon tf-icons bx bx-detail"></i>
-                            <div data-i18n="Form Elements">Form Elements</div>
-                        </a>
-                        <ul className="menu-sub">
-                            <li className="menu-item">
-                                <a href="forms-basic-inputs.html" className="menu-link">
-                                    <div data-i18n="Basic Inputs">Basic Inputs</div>
-                                </a>
-                            </li>
-                            <li className="menu-item">
-                                <a href="forms-input-groups.html" className="menu-link">
-                                    <div data-i18n="Input groups">Input groups</div>
-                                </a>
-                            </li>
-                        </ul>
+                    <li className="menu-header small text-uppercase">
+                        <span className="menu-header-text">Mục khác</span>
                     </li>
-                    <li className="menu-item">
-                        <a href="#" className="menu-link menu-toggle">
-                            <i className="menu-icon tf-icons bx bx-detail"></i>
-                            <div data-i18n="Form Layouts">Form Layouts</div>
-                        </a>
-                        <ul className="menu-sub">
-                            <li className="menu-item">
-                                <a href="form-layouts-vertical.html" className="menu-link">
-                                    <div data-i18n="Vertical Form">Vertical Form</div>
-                                </a>
-                            </li>
-                            <li className="menu-item">
-                                <a href="form-layouts-horizontal.html" className="menu-link">
-                                    <div data-i18n="Horizontal Form">Horizontal Form</div>
-                                </a>
-                            </li>
-                        </ul>
-                    </li> */}
+                    
                     {/* <!-- Tables --> */}
                     <li className="menu-item">
-                        <a href="#" onClick={handleLogout} className="menu-link">
+                        <Link to="/login" onClick={handleLogout} className="menu-link">
                             <i className='menu-icon tf-icons bx bx-log-out'></i>
                             <div data-i18n="Tables">Đăng xuất</div>
-                        </a>
+                        </Link>
                     </li>
                     
                 </ul>
