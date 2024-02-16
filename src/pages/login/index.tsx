@@ -1,30 +1,32 @@
-import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "~/redux/hook";
-import { ILoginPayload, inforUser, isLogin, login, logout, messageErrorLogin } from "~/redux/slices/authSlice";
-import { decrement, increment, selectCount } from "~/redux/slices/counterSlice";
-import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import * as Yup from 'yup';
-import { FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput, TextField, Typography } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { IconButton, InputAdornment, TextField } from "@mui/material";
+import { useState } from "react";
+import { useForm } from 'react-hook-form';
+import { Link } from "react-router-dom";
 import { ToastContainer, toast } from 'react-toastify';
+import * as Yup from 'yup';
 import Loading from "~/components/Loading/Index";
+import { useAppDispatch, useAppSelector } from "~/redux/hook";
+import { ILoginPayload, inforUser, isError, isLogin, logging, login, logout, messageErrorLogin } from "~/redux/slices/authSlice";
 
 function LoginPage() {
-    const [isLoading, setIsLoading] = useState(false);
-    const count = useAppSelector(selectCount);
+    // const [isLoading, setIsLoading] = useState(false);
+    const isLoading = useAppSelector(logging);
+    // const count = useAppSelector(selectCount);
     const isLoginUser = useAppSelector(isLogin);
     const userData = useAppSelector(inforUser);
     const msgErrorLogin = useAppSelector(messageErrorLogin);
+    const isErrorLogin = useAppSelector(isError);
 
-    const navigate = useNavigate();
     const dispatch = useAppDispatch();
 
     const [formLogin, setFormLogin] = useState<ILoginPayload>({
         loginName: undefined,
         password: undefined
     })
+
+
 
     const handleLogin = () => {
         dispatch(login(formLogin))
@@ -47,9 +49,10 @@ function LoginPage() {
     } = useForm({ resolver: yupResolver(validationSchema) });
 
     const onSubmit = async (formLogin:ILoginPayload) => {
-        setIsLoading(true);
+        // setIsLoading(true);
         await dispatch(login(formLogin))
-        setIsLoading(false);
+        // setIsLoading(false);
+        if(isErrorLogin) toast.warning(msgErrorLogin);
       };
 
       const [showPassword, setShowPassword] = useState(false);
@@ -192,10 +195,10 @@ function LoginPage() {
                                     {/* <Typography variant="inherit" color="textSecondary">
                                         {errors.password?.message}
                                     </Typography> */}
-                                    <small style={{color: "#ff3e1d"}}>{msgErrorLogin}</small>    
+                                    {/* <small style={{color: "#ff3e1d"}}>{msgErrorLogin}</small>     */}
                                     <div className="d-flex justify-content-between">
                                         <label className="form-label" htmlFor="password"></label>
-                                        <a href="auth-forgot-password-basic.html">
+                                        <a href="#">
                                             <small>Quên mật khẩu?</small>
                                         </a>
                                     </div>

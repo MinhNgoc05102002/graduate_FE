@@ -1,14 +1,15 @@
-import classNames from "classnames/bind";
+import { ICredit, IProps } from "~/types/ICredit";
 import styles from "./BoxCredit.module.scss";
-
-const cx = classNames.bind(styles);
-
 /**
  * Box Credit Dashboard
  * @returns 
  */
-export default function BoxCredit(props:any) {
-    const {credit} = props;
+
+
+// export default function BoxCredit(credit:ICredit) {
+
+export default function BoxCredit(props:IProps) {
+    const credit = props.credit;
     return (
         <>
             <div className="col-md-4">

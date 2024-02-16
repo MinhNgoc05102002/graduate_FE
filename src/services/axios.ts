@@ -1,4 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
+import { IResponse } from '~/types/IResponse';
 export const BASE_URL_MEDIA = 'https://localhost:7274'
 
 const request = axios.create({
@@ -30,7 +31,7 @@ export default request
 
 // NGOCNM: phần tự viết thêm để nhét token vào header (lấy từ project mxh cũ)
 export const Get = async (path:string, options = {},token:string) => {
-    const res = await request.get(path,{
+    const res:IResponse = await request.get(path,{
         ...options,
         headers: {
             'Authorization': `Bearer ${token}`
@@ -40,7 +41,7 @@ export const Get = async (path:string, options = {},token:string) => {
 }
 
 export const Post = async (path:string, options = {},token:string) => {
-    const res = await request.post(path, options,{
+    const res:IResponse = await request.post(path, options,{
         headers: {
             Authorization: `Bearer ${token}`
         }

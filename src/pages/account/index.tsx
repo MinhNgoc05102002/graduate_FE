@@ -68,21 +68,7 @@ export default function Account() {
                     </div>
                 </div>
 
-                <div className={` ${styles.search_container} d-flex justify-content-between row g-0`}>
-                    <div className="combobox col-8">
-                        {/* combobox ... */}
-                    </div>
 
-                    <div className={`d-flex col-4 align-items-center ${styles.box_search}`}>
-                        <i className="bx bx-search fs-4 lh-0"></i>
-                        <input
-                            type="text"
-                            className="form-control border-0 shadow-none"
-                            placeholder="Tìm kiếm..."
-                            aria-label="Tìm kiếm..."
-                        />
-                    </div>
-                </div>
 
                 <div>
                     {content.component ? <content.component /> : null}

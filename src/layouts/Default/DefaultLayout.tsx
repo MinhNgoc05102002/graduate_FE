@@ -49,6 +49,8 @@
 import Sidebar from "../components/Sidebar/Sidebar.js"
 import Header from "../components/Header/Header.js"
 import Footer from "../components/Footer/Footer.js"
+import { useAppSelector } from "~/redux/hook.js";
+import { inforUser } from "~/redux/slices/authSlice.js";
 
 // const cx = classNames.bind(styles);
 

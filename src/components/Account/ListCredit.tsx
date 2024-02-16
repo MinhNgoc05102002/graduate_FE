@@ -1,27 +1,151 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import BoxCreditAccount from "./BoxCreditAccount";
+import { Post } from "~/services/axios";
+import { CheckResponseSuccess } from "~/utils/common";
+import { ToastContainer, toast } from "react-toastify";
+import Loading from "../Loading/Index";
+import { useAppSelector } from "~/redux/hook";
+import { inforUser } from "~/redux/slices/authSlice";
+import styles from "../../pages/account/Account.module.scss";
+import { ICredit } from "~/types/ICredit";
 
+export function showDate(date_notified = "2021-11-05 15:00:00") {
+    /**
+    * @ findNotifDate : Finds the Date Difference of a Notification
+    * @ date_notified : The notification date
+    **/
+    const date_sent_tmp = new Date(date_notified);
+
+    let date_sent:any;
+    //Check for timestamps
+    if(date_notified.indexOf('-') != -1){
+          date_sent = date_sent_tmp.getTime();
+    }else{
+          date_sent = date_notified;
+    }
+
+    const date_now = new Date();
+    //current timestamp
+    var today = date_now.getTime(); 
+
+    //Subtract the timestamps
+    var calc = new Date(today - date_sent);
+
+    //Prevent Extra 1 Hour
+    calc.setHours( calc.getUTCHours() +0);
+
+    //Make our result readable
+    var calcDate = calc.getDate()+'-'+(calc.getMonth()+1)+'-'+calc.getFullYear();
+    var calcTime = calc.getHours()+':'+calc.getMinutes()+':'+calc.getSeconds();
+
+    //Get How many days, months and years that has passed
+    var date_passed = calcDate.split("-");
+    var time_passed = calcTime.split(":");
+    let days_passed;
+    let months_passed;
+    let years_passed;
+
+     if(!(calcDate.includes('1-1-1970'))) {
+
+         days_passed = ((parseInt(date_passed[0]) - 1) != 0 ) ? 
+         parseInt(date_passed[0]) - 1 : null;
+         months_passed = ((parseInt(date_passed[1]) - 1) != 0 )? 
+         parseInt(date_passed[1]) - 1 : null;
+         years_passed =  ((parseInt(date_passed[2]) - 1970) != 0) ?
+         parseInt(date_passed[2]) - 1970 : null;
+         return `Tháng ${date_sent_tmp.getMonth() + 1} năm ${date_sent_tmp.getFullYear()}`
+
+    }else{
+         days_passed = null;
+         months_passed = null;
+         years_passed =  null;
+         return `Gần đây`
+    }
+}
 
 // truyền username của user đang đăng nhập vào đây
-export default function ListCredit({ }) {
-    let [listCredit, setListCredit] = useState();
+export default function ListCredit() {
+    const userData = useAppSelector(inforUser);
+    let [listCredit, setListCredit] = useState<ICredit[]>([]);
+    const [isLoading, setIsLoading] = useState(false);
+    const [search, setSearch] = useState("");
+    
+    useEffect(() => {
+        if (userData?.token) {
+            getRecentCredit();
+        }
+    }, [userData?.token])
+
+    const getRecentCredit = async () => {
+        // dispatch(login(formLogin))
+        setIsLoading(true);
+        await Post(
+            "/api/Credit/get-list-credit-by-user", 
+            {
+                pageSize: 100,
+                pageIndex: 0,
+                searchText: search
+            }, 
+            userData?.token ?? ""
+        ).then((res) => {
+            if(CheckResponseSuccess(res)) {
+                let listCredit = res?.returnObj?.listResult;
+                setListCredit(listCredit);
+            }
+            else {
+                toast.error("Đã có lỗi xảy ra.");
+            }
+        })
+        .catch((err) => {
+            toast.error("Đã có lỗi xảy ra.");
+            console.log(err);
+        })
+        setIsLoading(false);
+    };
 
     return (
         <>
-            <div className="divider text-start mb-3 mt-5">
-                <div className="divider-text fs-5">Gần đây</div>
+            <Loading isLoading={isLoading}/>
+            <ToastContainer />
+            <div className={` ${styles.search_container} d-flex justify-content-between row g-0`}>
+                <div className="combobox col-8">
+                    {/* combobox ... */}
+                </div>
+
+                <div className={`d-flex col-4 align-items-center ${styles.box_search}`}>
+                    <i className="bx bx-search fs-4 lh-0"></i>
+                    <form onSubmit={(e) => {
+                        e.preventDefault();
+                        getRecentCredit()
+                    }}>
+                        <input
+                            value={search}
+                            onChange={(e) => setSearch(e.target.value)}
+                            onBlur={getRecentCredit}
+                            type="text"
+                            className="form-control border-0 shadow-none"
+                            placeholder="Tìm kiếm..."
+                            aria-label="Tìm kiếm..."
+                        />
+                    </form>
+                </div>
             </div>
 
-            <BoxCreditAccount />
+            {listCredit.map((credit, index) => {
+                let lastTime = index > 0 ? showDate(listCredit[index-1].createdAt) : ''
+                let time = showDate(credit.createdAt)
 
-            <BoxCreditAccount />
+                return (
+                <div key={credit.creditId}>
+                    {lastTime != time ? 
+                        <div className="divider text-start mb-3 mt-5">
+                            <div className="divider-text fs-5">{time}</div>
+                        </div>
+                    : null}
 
-            <div className="divider text-start mb-3 mt-5">
-                <div className="divider-text fs-5">Gần đây</div>
-            </div>
-
-            <BoxCreditAccount />
-
-            <BoxCreditAccount />
+                    <BoxCreditAccount credit={credit} />
+                </div>)
+            })}
+            
         </>)
 };

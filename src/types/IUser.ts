@@ -7,4 +7,5 @@ interface IUser {
     status?: string,
     hasWarning?:number,
     token?:string,
+    refreshToken?:string
 }

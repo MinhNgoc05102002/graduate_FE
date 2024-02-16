@@ -1,9 +1,9 @@
-import { Fragment, ReactElement } from "react";
-import { PRIVATE_ROUTER, PUBLIC_ROUTER } from "./routes"
-import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
-import { useAppSelector } from "./redux/hook";
-import { inforUser, isLogin, logging } from "./redux/slices/authSlice";
+import { Navigate, Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import NullLayout from "./layouts/NullLayout";
+import { useAppSelector } from "./redux/hook";
+import { inforUser, isLogin } from "./redux/slices/authSlice";
+import { PRIVATE_ROUTER, PUBLIC_ROUTER } from "./routes";
+import NotFound from "./pages/notfound/NotFound";
 
 
 function App() {
@@ -43,23 +43,20 @@ function App() {
             />
           })}
 
-          {PRIVATE_ROUTER.map((item, index) => {
+          {isLoginUser && PRIVATE_ROUTER.map((item, index) => {
             const Page = item.page;
             const Layout = item.layout || NullLayout;
             return <Route
               key={index}
               path={item.path}
               element={
-                isLoginUser ?
                   <Layout>
                     <Page />
                   </Layout>
-                  :
-                  <Navigate to="/login" />
               }
             />
           })}
-          <Route path="*" element={<>NotFound</>} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </Router>
     </>

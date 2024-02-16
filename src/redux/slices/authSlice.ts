@@ -1,6 +1,7 @@
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import request, { BASE_URL_MEDIA } from "~/services/axios";
+import { setValueToLocalStorage } from "~/utils/contactWithLocalStorage";
 import { RootState } from "../store";
-import { getValueLocalStorage } from "~/utils/contactWithLocalStorage";
 
 interface IUserInfo{
     isLogin: boolean,
@@ -35,23 +36,35 @@ const initialUser: IUserInfo = {
     userData: JSON.parse(String(localStorage.getItem('user_data'))) || null, 
 }
 console.log(initialUser)
+
 // --- Tạo thunk ---
 export const refreshToken = createAsyncThunk(
     'task/addTask',
-    async (token: string) => {
-        // check 
-      const response:IUser = await new Promise((resolve) =>
-      // --- Gọi API --- // refresh token
+    async (data: {token:string, refresh_token:string}) => {
+            const response:any = request.post(BASE_URL_MEDIA + '/api/Auth/refresh-token', 
+                data.refresh_token, 
+                {headers: {
+                    'Authorization': `Bearer ${data.token}`,
+                    'Content-Type': 'application/json'
+                }
+            }).then((res:any)=>{
+                const userData:IUser = res.returnObj;
         
-        setTimeout(() => resolve({ 
-            // lastName: ""
-         }), 1000)
-      );
-      return response;
-    }
-  );
-  
+                if(userData){
+                    setValueToLocalStorage('access_token', userData.token)
+                    setValueToLocalStorage('refresh_token',userData.refreshToken)
+                }
+                console.log(userData);
+                return userData;
+            }).catch((error)=>{
+                console.log(error);
+                localStorage.clear();
 
+                return error
+            })
+            return response;
+        }
+  );
 
 const authSlice = createSlice({
     name: 'auth',
@@ -89,9 +102,21 @@ const authSlice = createSlice({
            })
            .addCase(refreshToken.fulfilled, (state, action: PayloadAction<IUser>) => {
                 state.logging = false
-                state.isLogin = true
-                state.userData = action.payload
-           });
+                if (action.payload) {
+                    state.isLogin = true
+                    state.userData = action.payload
+                }
+                else {
+                    localStorage.clear();
+                }
+           })
+           .addCase(refreshToken.rejected, (state) => {
+                state.userData = undefined,
+                state.loginError.messageError = ""
+                state.loginError.typeError = ""
+                state.logging = false
+                state.isLogin = false
+            });
        }
 })
 
@@ -101,6 +126,7 @@ export const isLogin = (state:RootState) => state.auth.isLogin
 export const logging = (state:RootState) => state.auth.logging 
 export const inforUser = (state:RootState) => state.auth.userData 
 export const messageErrorLogin = (state:RootState) => state.auth.loginError.messageError 
+export const isError = (state:RootState) => state.auth.isError
 
 
 const authReducer = authSlice.reducer;

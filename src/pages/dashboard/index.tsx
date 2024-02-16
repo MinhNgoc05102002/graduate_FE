@@ -1,11 +1,12 @@
-import { Key, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import BoxAccount from "~/components/BoxAccount/Index";
 import BoxCredit from "~/components/BoxCredit/Index";
 import Loading from "~/components/Loading/Index";
 import { useAppSelector } from "~/redux/hook";
 import { inforUser } from "~/redux/slices/authSlice";
-import { Get, Post } from "~/services/axios";
+import { Post } from "~/services/axios";
+import { ICredit } from "~/types/ICredit";
 import { CheckResponseSuccess } from "~/utils/common";
 
 
@@ -13,15 +14,18 @@ import { CheckResponseSuccess } from "~/utils/common";
 export default function Dashboard() {
     const userData = useAppSelector(inforUser);
     console.log(userData);
-    
     const [isLoading, setIsLoading] = useState(false);
     const [recentCredit, setRecentCredit] = useState([]);
     const [topCredit, setTopCredit] = useState([]);
+    const [topAccount, setTopAccount] = useState([]);
 
     useEffect(() => {
-        getRecentCredit();
-        getTopCredit();
-    }, [])
+        if (userData?.token) {
+            getRecentCredit();
+            getTopCredit();
+            getTopAccount();
+        }
+    }, [userData?.token])
 
     const getRecentCredit = async () => {
         // dispatch(login(formLogin))
@@ -81,6 +85,33 @@ export default function Dashboard() {
         setIsLoading(false);
     };
 
+    const getTopAccount = async () => {
+        // dispatch(login(formLogin))
+        setIsLoading(true);
+        await Post(
+            "/api/Account/get-list-account-by-filter", 
+            {
+                pageSize: 3,
+                pageIndex: 0,
+                searchText: ""
+            }, 
+            userData?.token ?? ""
+        ).then((res) => {
+            if(CheckResponseSuccess(res)) {
+                let listAccount = res?.returnObj?.listResult;
+                setTopAccount(listAccount);
+            }
+            else {
+                toast.error("Đã có lỗi xảy ra.");
+            }
+        })
+        .catch((err) => {
+            toast.error("Đã có lỗi xảy ra.");
+            console.log(err);
+        })
+        setIsLoading(false);
+    };
+
     return (
         <> 
             <Loading isLoading={isLoading}/>
@@ -95,8 +126,16 @@ export default function Dashboard() {
                 </div>
 
                 <div className="row mb-5">
-                    {recentCredit.map((credit: any) => (
-                        <BoxCredit key={credit.creditId} credit={credit}/>
+                    {recentCredit.map((credit: ICredit) => (
+                        <BoxCredit 
+                            key={credit.creditId} 
+                            credit={credit}
+                            // creditId={""} 
+                            // name={""} 
+                            // countFlashcard={0} 
+                            // avatar={""} 
+                            // createdBy={""} 
+                        />
                     ))}
                     {/* <BoxCredit />
                     <BoxCredit /> */}
@@ -122,9 +161,12 @@ export default function Dashboard() {
                     <div className="divider-text fs-5 fw-semibold">Tác giả hàng đầu</div>
                 </div>
                 <div className="row mb-5">
+                    {topAccount.map((account:any) => (
+                        <BoxAccount key={account.username} account={account}/>
+                    ))}
+                    {/* <BoxAccount />
                     <BoxAccount />
-                    <BoxAccount />
-                    <BoxAccount />
+                    <BoxAccount /> */}
                 </div>
 
                 {/* <!-- Layout Demo --> */}

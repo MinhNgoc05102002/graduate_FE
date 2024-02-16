@@ -26,7 +26,7 @@ function* handleLogin(payload: ILoginPayload) {
       yield put(loginSucces(dataUser));
       if(dataUser.token){
           setValueToLocalStorage('access_token',dataUser.token)
-          setValueToLocalStorage('user_data',dataUser)
+          setValueToLocalStorage('refresh_token',dataUser.refreshToken)
         }
     }else{
       // nhận dữ liệu trả về ở đây r show lỗi lên ... (truyền vào trong hàm login fail)
@@ -35,7 +35,7 @@ function* handleLogin(payload: ILoginPayload) {
         messageError: dataRes.msg
       }));
     }
-    console.log(payload, dataRes, 'handle_login', response);
+
   } catch (error: any) {
         // Handle error if needed
         yield put(loginFailed({
