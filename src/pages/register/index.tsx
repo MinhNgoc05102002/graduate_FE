@@ -51,7 +51,7 @@ export default function Register() {
                 email: data.email,
                 passwordText: data.password
             }, 
-            ""
+            // ""
         ).then((res) => {
             if(CheckResponseSuccess(res)) {
                 toast.success("Bạn đã đăng ký thành công. Hãy đăng nhập để tiếp tục!")

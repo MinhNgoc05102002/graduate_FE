@@ -139,7 +139,7 @@ export default function Sidebar() {
                     </li>
                     <li className={`menu-item ${openItem == 'FOLDER' ? 'open': ''}`}>
                         <a href="#" onClick={(e) => {e.preventDefault(); setOpenItem('FOLDER')}} className="menu-link menu-toggle">
-                            <i className="menu-icon tf-icons bx bx-dock-top"></i>
+                            <i className='menu-icon tf-icons bx bx-folder' ></i>
                             <div data-i18n="Authentications">Thư mục</div>
                         </a>
                         <ul className="menu-sub">

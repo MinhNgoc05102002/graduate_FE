@@ -7,14 +7,26 @@ const request = axios.create({
 });
 
 // Add a request interceptor
+// request.interceptors.request.use(function (config) {
+//     console.log(config,"ádkasdlas")
+//     // Do something before request is sent
+//     return config;
+//   }, function (error) {
+//     // Do something with request error
+//     return Promise.reject(error);
+//   });
+
+// Add a request interceptor
 request.interceptors.request.use(function (config) {
-    console.log(config,"ádkasdlas")
-    // Do something before request is sent
-    return config;
-  }, function (error) {
-    // Do something with request error
-    return Promise.reject(error);
-  });
+  const token = String(localStorage.getItem("access_token"));
+  config.headers.Authorization = "Bearer " + token;
+  config.headers["Content-Type"] = "application/json";
+  // Do something before request is sent
+  return config;
+}, function (error) {
+  // Do something with request error
+  return Promise.reject(error);
+});
 
 // Add a response interceptor
 request.interceptors.response.use(function (response: AxiosResponse) {
@@ -30,23 +42,37 @@ request.interceptors.response.use(function (response: AxiosResponse) {
 export default request
 
 // NGOCNM: phần tự viết thêm để nhét token vào header (lấy từ project mxh cũ)
-export const Get = async (path:string, options = {},token:string) => {
-    const res:IResponse = await request.get(path,{
-        ...options,
-        headers: {
-            'Authorization': `Bearer ${token}`
-        }
-    });
-    return res
+// export const Get = async (path:string, options = {},token:string) => {
+//     const res:IResponse = await request.get(path,{
+//         ...options,
+//         headers: {
+//             'Authorization': `Bearer ${token}`
+//         }
+//     });
+//     return res
+// }
+
+// export const Post = async (path:string, options:any = {},token:string) => {
+//   const res:IResponse = await request.post(path, options,
+//     {
+//       headers: {
+//           Authorization: `Bearer ${token}`,
+//           'Content-Type': 'application/json'
+//       }
+//     });
+//   return res   
+// }
+
+
+export const Get = async (path:string, options = {}) => {
+  const res:IResponse = await request.get(path,{
+      ...options,
+  });
+  return res
 }
 
-export const Post = async (path:string, options:any = {},token:string) => {
-    const res:IResponse = await request.post(path, options,{
-        headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json'
-        }
-    });
+export const Post = async (path:string, options:any = {}) => {
+    const res:IResponse = await request.post(path, options);
     return res   
 }
 

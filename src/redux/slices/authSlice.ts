@@ -11,7 +11,7 @@ interface IUserInfo{
         messageError: string,
         typeError: string,
     }
-    userData?: IUser
+    userData?: IUser | null
 }
 
 export interface IErrorPayload{
@@ -33,7 +33,8 @@ const initialUser: IUserInfo = {
         typeError:"",
     },
     
-    userData: JSON.parse(String(localStorage.getItem('user_data'))) || null, 
+    // userData: JSON.parse(String(localStorage.getItem('user_data'))) || null, 
+    userData: null, 
 }
 console.log(initialUser)
 

@@ -2,8 +2,12 @@ import AuthLayout from "~/layouts/Auth/AuthLayout"
 import { DefaultLayout } from "~/layouts/Index"
 import { HomePage, LoginPage } from "~/pages"
 import Account from "~/pages/account"
+import Credit from "~/pages/credit/Credit"
 import Dashboard from "~/pages/dashboard"
+import Folder from "~/pages/folder/Folder"
+import Class from "~/pages/class/Class"
 import Register from "~/pages/register/index"
+import CreateCredit from "~/pages/create-credit/CreateCredit"
 
 export const PUBLIC_ROUTER = [
     {
@@ -33,6 +37,26 @@ export const PRIVATE_ROUTER = [
     {
         path:"/account/:username",
         page: Account,
+        layout: DefaultLayout
+    },
+    {
+        path:"/credit/:id",
+        page: Credit,
+        layout: DefaultLayout
+    },
+    {
+        path:"/folder/:id",
+        page: Folder,
+        layout: DefaultLayout
+    },
+    {
+        path:"/class/:id",
+        page: Class,
+        layout: DefaultLayout
+    },
+    {
+        path:"/create-credit",
+        page: CreateCredit,
         layout: DefaultLayout
     },
     // {

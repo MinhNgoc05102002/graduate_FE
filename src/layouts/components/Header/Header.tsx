@@ -119,7 +119,7 @@ export default function Header() {
                 pageSize: 3,
                 pageIndex: 0
             }, 
-            userData?.token ?? ""
+            // userData?.token ?? ""
         ).then((res) => {
             if(CheckResponseSuccess(res)) {
                 let listNoti = res?.returnObj?.listResult;

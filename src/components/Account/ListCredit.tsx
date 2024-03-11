@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
-import BoxCreditAccount from "./BoxCreditAccount";
+import BoxCreditAccount from "./Box/BoxCreditAccount";
 import { Post } from "~/services/axios";
-import { CheckResponseSuccess } from "~/utils/common";
+import { CheckResponseSuccess, GetIdFromCurrentPage } from "~/utils/common";
 import { ToastContainer, toast } from "react-toastify";
 import Loading from "../Loading/Index";
 import { useAppSelector } from "~/redux/hook";
@@ -64,8 +64,9 @@ function showDate(date_notified = "2021-11-05 15:00:00") {
 }
 
 // truyền username của user đang đăng nhập vào đây
-export default function ListCredit(props:any) {
-    const {username} = props
+export default function ListCredit(props:{username:string|undefined, showTime: boolean, type:string}) {
+    const {username, showTime, type = "ACCOUNT"} = props;
+
     const userData = useAppSelector(inforUser);
     const [listCredit, setListCredit] = useState<ICredit[]>([]);
     const [isLoading, setIsLoading] = useState(false);
@@ -75,26 +76,34 @@ export default function ListCredit(props:any) {
 
     useEffect(() => {
         if (userData?.token) {
-            getRecentCredit();
+            getListCredit();
         }
-    }, [userData?.token, username])
+    }, [userData?.token, username, pageIndex])
 
-    useEffect(() => {
-        getRecentCredit();
-    }, [pageIndex])
-
-    const getRecentCredit = async () => {
+    const getListCredit = async () => {
         // dispatch(login(formLogin))
         setIsLoading(true);
+
+        let api = "/api/Credit/get-list-credit-by-user";
+        let containerId = null;
+        let user = username;
+
+        if (type != "ACCOUNT") {
+            api = "/api/Credit/get-list-credit-by-class";
+            containerId = GetIdFromCurrentPage();
+            user = ""
+        }
+
         await Post(
-            "/api/Credit/get-list-credit-by-user", 
+            api, 
             {
                 pageSize: 5,
                 pageIndex: pageIndex,
                 searchText: search,
-                username: username
+                username: user,
+                containerId: containerId
             }, 
-            userData?.token ?? ""
+            // userData?.token ?? ""
         ).then((res) => {
             if(CheckResponseSuccess(res)) {
                 let listCredit = res?.returnObj?.listResult;
@@ -114,7 +123,6 @@ export default function ListCredit(props:any) {
 
     const handleNextPage = (index:number) => {
         let newPageIndex = pageIndex + index;
-        console.log(newPageIndex)
         if (newPageIndex >= 1 && newPageIndex <= totalPage) {
             setPageIndex(newPageIndex);
         }
@@ -123,14 +131,14 @@ export default function ListCredit(props:any) {
     const handleSearch = (e:any = null) => {
         setPageIndex(1)
         e?.preventDefault();
-        getRecentCredit()
+        getListCredit()
     }
 
     return (
         <>
             <Loading isLoading={isLoading}/>
             <ToastContainer />
-            <div className={` ${styles.search_container} d-flex justify-content-between row g-0`}>
+            <div className={` ${styles.search_container} d-flex justify-content-between row g-0 mb-5`}>
                 <div className="combobox col-8">
                     {/* combobox ... */}
                 </div>
@@ -159,7 +167,7 @@ export default function ListCredit(props:any) {
 
                 return (
                 <div key={credit.creditId}>
-                    {lastTime != time ? 
+                    {(lastTime != time && showTime)? 
                         <div className="divider text-start mb-3 mt-5">
                             <div className="divider-text fs-5">{time}</div>
                         </div>
@@ -181,7 +189,7 @@ export default function ListCredit(props:any) {
                     <a className="page-link">Trang 2 / 3</a>
                 </li> */}
                 <li className="page-item">
-                    <a className={`page-link fw-semibold ${styles.pageSize} `}>
+                    <a className={`page-link fw-semibold ${styles.page_size} `}>
                         Trang {pageIndex} / {totalPage}
                     </a>
                 </li>

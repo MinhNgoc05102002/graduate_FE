@@ -27,15 +27,13 @@ const LIST_NAVBAR = [
         id: "FOLDER",
         title: "Thư mục",
         url: '/folders',
-        component: Maintain,
-        // component: ListFolder,
+        component: ListFolder,
     },
     {
         id: "CLASS",
         title: "Lớp học",
         url: '/classes',
-        component: Maintain,
-        // component: ListClass,
+        component: ListClass,
     },
     {
         id: "STREAK",
@@ -64,7 +62,7 @@ export default function Account() {
         await Post(
             "/api/Account/get-account-by-username", 
             username, 
-            userData?.token ?? ""
+            // userData?.token ?? ""
         ).then((res) => {
             if(CheckResponseSuccess(res)) {
                 let account = res?.returnObj;
@@ -150,7 +148,7 @@ export default function Account() {
 
 
                 <div>
-                    {content.component ? <content.component username={currentUser.username}/> : null}
+                    {content.component ? <content.component username={currentUser.username} showTime={true}/> : null}
                 </div>
 
 

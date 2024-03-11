@@ -3,18 +3,18 @@ import { ToastContainer, toast } from "react-toastify";
 import { useAppSelector } from "~/redux/hook";
 import { inforUser } from "~/redux/slices/authSlice";
 import { Post } from "~/services/axios";
-import { CheckResponseSuccess } from "~/utils/common";
-import styles from "../../pages/account/Account.module.scss";
+import { CheckResponseSuccess, GetIdFromCurrentPage } from "~/utils/common";
+import styles from "./ClassComp.module.scss";
 import Loading from "../Loading/Index";
 import { IClass } from "~/types/IClass";
-import BoxClassAccount from "./Box/BoxClassAccount";
+import BoxAccount from "./BoxAccount";
 
 // truyền username của user đang đăng nhập vào đây
-export default function ListClass(props:any) {
+export default function ListMember(props:any) {
     const {username} = props;
 
     const userData = useAppSelector(inforUser);
-    const [listClass, setListClass] = useState<IClass[]>([]);
+    const [listAccount, setListAccount] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [search, setSearch] = useState("");
     const [pageIndex, setPageIndex] = useState(1);
@@ -26,26 +26,23 @@ export default function ListClass(props:any) {
         }
     }, [userData?.token, username, pageIndex])
 
-    // useEffect(() => {
-    //     getRecentCredit();
-    // }, [pageIndex])
-
     const getRecentCredit = async () => {
         // dispatch(login(formLogin))
         setIsLoading(true);
+        let containerId = GetIdFromCurrentPage();
         await Post(
-            "/api/Class/get-class-by-username", 
+            "/api/Account/get-account-join-class", 
             {
-                pageSize: 5,
+                pageSize: 10,
                 pageIndex: pageIndex,
                 searchText: search,
-                username: username
+                // username: username,
+                containerId: containerId
             }, 
-            // userData?.token ?? ""
         ).then((res) => {
             if(CheckResponseSuccess(res)) {
-                let listClass = res?.returnObj?.listResult;
-                setListClass(listClass);
+                let listAccount = res?.returnObj?.listResult;
+                setListAccount(listAccount);
                 setToTalPage(res?.returnObj?.totalPage)
             }
             else {
@@ -96,24 +93,15 @@ export default function ListClass(props:any) {
                         />
                     </form>
                 </div>
+
             </div>
 
-            {listClass.map((item, index) => {
-                // let lastTime = index > 0 ? showDate(listClass[index-1].createdAt) : ''
-                // let time = showDate(item.createdAt)
+            <div className="row mb-5">
+                {listAccount.map((account:any) => (
+                    <BoxAccount key={account.username} account={account}/>
+                ))}
+            </div>
 
-                return (
-                <div key={item.classId}>
-                    {/* {lastTime != time ? 
-                        <div className="divider text-start mb-3 mt-5">
-                            <div className="divider-text fs-5">{time}</div>
-                        </div>
-                    : null} */}
-
-                    <BoxClassAccount class={item} />
-                </div>)
-            })}
-            
             <nav aria-label="Page navigation">
                 <ul className="pagination justify-content-center mt-4">
                 <li className="page-item prev">
@@ -138,5 +126,6 @@ export default function ListClass(props:any) {
                 </li>
                 </ul>
             </nav>
+
         </>)
 };

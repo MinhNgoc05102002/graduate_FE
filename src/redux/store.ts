@@ -16,8 +16,10 @@ export const store = configureStore({
 // then run the saga
 sagaMiddleware.run(rootSaga);
 
-var token = JSON.parse(String(localStorage.getItem('access_token')));
-var refresh_token = JSON.parse(String(localStorage.getItem('refresh_token')));
+// var token = JSON.parse(String(localStorage.getItem('access_token')));
+// var refresh_token = JSON.parse(String(localStorage.getItem('refresh_token')));
+var token = String(localStorage.getItem('access_token'));
+var refresh_token = String(localStorage.getItem('refresh_token'));
 
 if(token){
     store.dispatch(refreshToken({token, refresh_token}));

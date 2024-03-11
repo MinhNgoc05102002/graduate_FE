@@ -19,7 +19,7 @@ function* handleLogin(payload: ILoginPayload) {
     const response: AxiosResponse = yield call(fetchApiAuth, payload);
     const dataRes = response.data;
     console.log(response)
-    if(dataRes?.returnObj){
+    if(dataRes?.returnObj && dataRes?.success == true){
       const dataUser: IUser = {
         ...dataRes.returnObj
       };

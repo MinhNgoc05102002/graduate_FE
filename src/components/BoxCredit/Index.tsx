@@ -13,7 +13,7 @@ export default function BoxCredit(props:IProps) {
     const credit = props.credit;
     return (
         <>
-            <div className="col-md-4">
+            <Link to={`/credit/${credit.creditId}`} className="col-md-4">
                 <div className="card mb-3">
                     <div className="card-body">
                         <div className="row g-0">
@@ -41,7 +41,7 @@ export default function BoxCredit(props:IProps) {
                         </div>
                     </div>
                 </div>
-            </div>
+            </Link>
         </>
     )
 };

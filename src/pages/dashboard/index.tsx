@@ -35,9 +35,9 @@ export default function Dashboard() {
             {
                 pageSize: 3,
                 pageIndex: 0,
-                searchText: ""
+                searchText: "",
             }, 
-            userData?.token ?? ""
+            // userData?.token ?? ""
         ).then((res) => {
             if(CheckResponseSuccess(res)) {
                 console.log(res);
@@ -66,7 +66,7 @@ export default function Dashboard() {
                 pageIndex: 0,
                 searchText: ""
             }, 
-            userData?.token ?? ""
+            // userData?.token ?? ""
         ).then((res) => {
             if(CheckResponseSuccess(res)) {
                 console.log(res);
@@ -95,7 +95,7 @@ export default function Dashboard() {
                 pageIndex: 0,
                 searchText: ""
             }, 
-            userData?.token ?? ""
+            // userData?.token ?? ""
         ).then((res) => {
             if(CheckResponseSuccess(res)) {
                 let listAccount = res?.returnObj?.listResult;

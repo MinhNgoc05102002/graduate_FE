@@ -36,20 +36,20 @@ function Home() {
         mutate(keyPost);
     }
 
-    const callAPIWeather = () => {
-        Get("/WeatherForecast/test", {}, userData?.token ?? "")
-        .then((res) => {
-            console.log(res);
-            setData(res.data);
-        })
-        .catch((err) => {
-            console.log(err);
-        })
-    }
+    // const callAPIWeather = () => {
+    //     Get("/WeatherForecast/test", {}, userData?.token ?? "")
+    //     .then((res) => {
+    //         console.log(res);
+    //         setData(res.data);
+    //     })
+    //     .catch((err) => {
+    //         console.log(err);
+    //     })
+    // }
 
 
     return (<div>
-        <button onClick={callAPIWeather}>Click</button>
+        {/* <button onClick={callAPIWeather}>Click</button> */}
         <button type="button" onClick={handleLogout}>logout</button>
 
         {/* {isLoading || !data ? <>Loading san pham</> : data.map((post) => {

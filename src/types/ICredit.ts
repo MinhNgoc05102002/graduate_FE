@@ -13,6 +13,7 @@ export interface ICredit {
     flashcards: any
     folders: any
     name: string
+    isLearned: boolean
 }
 
 export interface IProps {

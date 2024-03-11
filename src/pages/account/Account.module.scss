@@ -49,12 +49,19 @@
     margin-top: 15px;
 
     .box_search {
+        i {
+            margin-left: 5px;
+        }
         background-color: white;
         border-radius: 5px;
         padding: 5px;
     }
 }
 
+// Box 
+.box_padding {
+    padding: 0.5rem 1rem;
+}
 
 // Paging
 
@@ -87,7 +94,7 @@
 
 }
 
-.pageSize {
+.page_size {
     color: #696cff !important;
     border: 1px solid #696cff !important;
     margin-left: 15px !important;
@@ -100,4 +107,19 @@
         background-color: transparent;
         color: #696cff;
     }
+}
+
+// BoxCreditAccount.tsx
+.divider {
+    border: 1px solid #dfe0e3;
+    border-radius: 100px;
+    height: 18px;
+    margin-left: 0.75rem;
+    margin-right: 0.5rem;
+}
+
+// BoxFolderAccount.tsx
+.icon_folder {
+    margin-right: 5px;
+    font-size: 22px;
 }

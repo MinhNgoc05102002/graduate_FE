@@ -14,7 +14,8 @@ export function getValueLocalStorage(key:string){
 
 export function setValueToLocalStorage(key:string,value:any){
     try{
-        const valueConvert = JSON.stringify(value);
+        // const valueConvert = JSON.stringify(value);
+        const valueConvert = (value);
         if(valueConvert){
             localStorage.setItem(key,valueConvert);
             return true
